@@ -120,50 +120,41 @@
             <!-- Table Side -->
             <div class="col-md-6">
                 <h5 class="mb-4 fw-bold">Food Delivery</h5>
-                <table class="table table-borderless">
-                    <thead class="bg-light">
-                        <tr>
-                            <th>#</th>
-                            <th>Tenant</th>
-                            <th>Reviews</th>
+                <table class="table" style="border-collapse: collapse;">
+                    <thead>
+                        <tr style="background-color: #FFFCF5;">
+                            <th style="width: 5%;"></th>
+                            <th style="width: 75%;">Tenant</th>
+                            <th style="width: 20%;" class="text-end">reviews</th>
                         </tr>
-                    </thead>
+                        </thead>
                     <tbody>
                         <tr>
                             <td>1</td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning rounded px-2 py-1 me-2 text-dark fw-semibold">GrabFood</div>
-                                </div>
+                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 100%;">
+                                <span class="fw-semibold text-dark">GrabFood</span>
+                            </div>
                             </td>
-                            <td>
-                                <div class="bg-warning" style="height: 16px; width: 90%; max-width: 200px; border-radius: 4px;"></div>
-                                <small class="ms-2">7382</small>
-                            </td>
+                            <td class="text-end align-middle text-muted fw-medium">7382</td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning rounded px-2 py-1 me-2 text-dark fw-semibold">GoFood</div>
-                                </div>
+                            <td style="background-color: #FFFCF5;">2</td>
+                            <td style="background-color: #FFFCF5;">
+                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 85%;">
+                                <span class="fw-semibold text-dark">GoFood</span>
+                            </div>
                             </td>
-                            <td>
-                                <div class="bg-warning" style="height: 16px; width: 65%; max-width: 200px; border-radius: 4px;"></div>
-                                <small class="ms-2">4254</small>
-                            </td>
+                            <td class="text-end align-middle text-muted fw-medium" style="background-color: #FFFCF5;">4254</td>
                         </tr>
                         <tr>
                             <td>3</td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning rounded px-2 py-1 me-2 text-dark fw-semibold">Shopee</div>
-                                </div>
+                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 70%;">
+                                <span class="fw-semibold text-dark">Shopee</span>
+                            </div>
                             </td>
-                            <td>
-                                <div class="bg-warning" style="height: 16px; width: 45%; max-width: 200px; border-radius: 4px;"></div>
-                                <small class="ms-2">2567</small>
-                            </td>
+                            <td class="text-end align-middle text-muted fw-medium">2567</td>
                         </tr>
                     </tbody>
                 </table>
