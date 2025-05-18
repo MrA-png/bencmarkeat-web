@@ -127,36 +127,30 @@
                             <th style="width: 75%;">Tenant</th>
                             <th style="width: 20%;" class="text-end">reviews</th>
                         </tr>
-                        </thead>
+                    </thead>
+                    @php
+                        $maxCount = max(array_column($results, 'count'));
+                    @endphp
+
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>
-                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 100%;">
-                                <span class="fw-semibold text-dark">GrabFood</span>
-                            </div>
-                            </td>
-                            <td class="text-end align-middle text-muted fw-medium">7382</td>
-                        </tr>
-                        <tr>
-                            <td style="background-color: #FFFCF5;">2</td>
-                            <td style="background-color: #FFFCF5;">
-                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 85%;">
-                                <span class="fw-semibold text-dark">GoFood</span>
-                            </div>
-                            </td>
-                            <td class="text-end align-middle text-muted fw-medium" style="background-color: #FFFCF5;">4254</td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>
-                            <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: 70%;">
-                                <span class="fw-semibold text-dark">Shopee</span>
-                            </div>
-                            </td>
-                            <td class="text-end align-middle text-muted fw-medium">2567</td>
-                        </tr>
+                        @foreach ($results as $index => $item)
+                            @php
+                                $rank = $index + 1;
+                                $percentage = round(($item['count'] / $maxCount) * 100);
+                                $rowBg = $index % 2 === 1 ? 'style=background-color:#FFFCF5;' : '';
+                            @endphp
+                            <tr {!! $rowBg !!}>
+                                <td>{{ $rank }}</td>
+                                <td {!! $rowBg !!}>
+                                    <div class="bg-warning d-flex align-items-center rounded px-2" style="height: 28px; width: {{ $percentage }}%;">
+                                        <span class="fw-semibold text-dark">{{ $item['label'] }}</span>
+                                    </div>
+                                </td>
+                                <td class="text-end align-middle text-muted fw-medium" {!! $rowBg !!}>{{ $item['count'] }}</td>
+                            </tr>
+                        @endforeach
                     </tbody>
+
                 </table>
             </div>
 
@@ -192,37 +186,8 @@
     const radarChart = new Chart(radarCtx, {
         type: 'radar',
         data: {
-            labels: [
-                'Operational Experience',
-                'Financial Aspects',
-                'Technical Performance',
-                'Customer Support',
-                'Promotions & Growth Support'
-            ],
-            datasets: [
-                {
-                    label: 'GoBiz',
-                    data: [9, 8, 6, 5, 7],
-                    fill: true,
-                    backgroundColor: 'rgba(244, 67, 54, 0.4)',
-                    borderColor: 'rgba(244, 67, 54, 1)',
-                    pointBackgroundColor: 'rgba(244, 67, 54, 1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(244, 67, 54, 1)'
-                },
-                {
-                    label: 'GrabFood',
-                    data: [7, 6, 5, 6, 8],
-                    fill: true,
-                    backgroundColor: 'rgba(255, 206, 86, 0.3)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    pointBackgroundColor: 'rgba(255, 206, 86, 1)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgba(255, 206, 86, 1)'
-                }
-            ]
+            labels: @json($labels),
+            datasets: @json($datasets)
         },
         options: {
             responsive: true,
@@ -230,18 +195,10 @@
                 r: {
                     angleLines: { display: true },
                     suggestedMin: 0,
-                    suggestedMax: 10,
-                    pointLabels: {
-                        callback: function(label) {
-                            return label.split(' ');
-                        },
-                        font: {
-                            size: 12
-                        }
-                    },
+                    suggestedMax: 100,
                     ticks: {
+                        stepSize: 20,
                         backdropColor: 'transparent',
-                        stepSize: 2
                     }
                 }
             },
@@ -249,7 +206,7 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.raw + ' skor';
+                            return context.raw + ' %';
                         }
                     }
                 },
@@ -259,11 +216,12 @@
                         boxWidth: 20,
                         padding: 15
                     }
-                },
+                }
             }
         }
     });
 </script>
+
 
 <script>
 let sentimentChartInstance;

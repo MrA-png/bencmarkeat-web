@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\reviewController;
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::get('/', [reviewController::class, 'fetchData']);
 
