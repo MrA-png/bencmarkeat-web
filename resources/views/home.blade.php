@@ -114,6 +114,38 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <!-- Radar Chart -->
+                    <div class="col-md-6 d-flex align-items-center justify-content-center mb-4 mb-md-0">
+                        <div class="w-100" style="max-width: 400px;">
+                            <canvas id="radarChartPositive"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Testimoni -->
+                    <div class="col-md-6">
+                        <h5 class="mb-4 fw-bold">Apa kata mereka tentang GoBiz ?</h5>
+                        
+                        <div class="mb-3">
+                            <div class="text-muted mb-1 small">Operational Experience (ease of order management, menu updates, etc)</div>
+                            <div class="bg-white p-3 rounded shadow-sm">Pengaturan menunya memudahkan, tapi sering banget tiba-tiba error.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted mb-1 small">Financial Aspects (fees, commissions, payments, etc)</div>
+                            <div class="bg-white p-3 rounded shadow-sm">Suka banget ada fitur support pemula, ada modal nya juga, terimakasih.</div>
+                        </div>
+
+                        <div>
+                            <div class="text-muted mb-1 small">Financial Aspects (fees, commissions, payments, etc)</div>
+                            <div class="bg-white p-3 rounded shadow-sm">Suka banget ada fitur support pemula, ada modal nya juga, terimakasih.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="container py-5">
         <div class="row">
@@ -157,7 +189,7 @@
             <!-- Chart Side -->
             <div class="col-md-6">
                 <h5 class="mb-1 fw-bold">Distribusi sentimen</h5>
-                <p class="text-muted small mb-3">Data from 2022 - 2024</p>
+                <p class="text-muted small mb-3">Data from 2022 - 2025</p>
                 <div style="position: relative; height: 200px;">
                     <canvas id="sentimentChart"></canvas>
                 </div>
@@ -222,80 +254,110 @@
     });
 </script>
 
-
 <script>
-let sentimentChartInstance;
-
-document.addEventListener('DOMContentLoaded', function () {
-    const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
-
-    if (sentimentChartInstance) {
-        sentimentChartInstance.destroy();
-    }
-
-    sentimentChartInstance = new Chart(sentimentCtx, {
-        type: 'bar',
+    const radarCtxPositive = document.getElementById('radarChartPositive').getContext('2d');
+    const radarChartPositive = new Chart(radarCtxPositive, {
+        type: 'radar',
         data: {
-            labels: ['GrabFood', 'ShopeeFood', 'GoFood'],
-            datasets: [
-                {
-                    label: 'Positive',
-                    data: [68, 54, 65],
-                    backgroundColor: '#FACC15',
-                    barThickness: 25,
-                    borderRadius: 5,
-                },
-                {
-                    label: 'Negative',
-                    data: [43, 72, 35],
-                    backgroundColor: '#F43F5E',
-                    barThickness: 25,
-                    borderRadius: 5,
-                }
-            ]
+            labels: @json($labelsPositive),
+            datasets: @json($datasetsPositive)
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    enabled: true,
-                    callbacks: {
-                        label: function (context) {
-                            return `${context.dataset.label}: ${context.parsed.y}`;
-                        }
+            scales: {
+                r: {
+                    angleLines: { display: true },
+                    suggestedMin: 0,
+                    suggestedMax: 100,
+                    ticks: {
+                        stepSize: 20,
+                        backdropColor: 'transparent',
                     }
                 }
             },
-            scales: {
-                x: {
-                    stacked: false,
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: '#6c757d',
-                        font: {
-                            size: 12
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return context.raw + ' %';
                         }
                     }
                 },
-                y: {
-                    beginAtZero: true,
-                    grid: {
-                        color: '#f5f5f5',
-                        drawBorder: false
-                    },
-                    ticks: {
-                        display: true,
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 15
                     }
                 }
             }
         }
     });
-});
 </script>
+
+
+<script>
+    let sentimentChartInstance;
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const sentimentCtx = document.getElementById('sentimentChart').getContext('2d');
+
+        if (sentimentChartInstance) {
+            sentimentChartInstance.destroy();
+        }
+
+        sentimentChartInstance = new Chart(sentimentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['GrabFood', 'ShopeeFood', 'GoFood'],
+                datasets: [
+                    {
+                        label: 'Positive',
+                        data: [
+                            {{ $sentiments['grab_food']['positive'] }},
+                            {{ $sentiments['shope_food']['positive'] }},
+                            {{ $sentiments['gofood']['positive'] }}
+                        ],
+                        backgroundColor: '#FACC15',
+                        barThickness: 25,
+                        borderRadius: 5,
+                    },
+                    {
+                        label: 'Negative',
+                        data: [
+                            {{ $sentiments['grab_food']['negative'] }},
+                            {{ $sentiments['shope_food']['negative'] }},
+                            {{ $sentiments['gofood']['negative'] }}
+                        ],
+                        backgroundColor: '#F43F5E',
+                        barThickness: 25,
+                        borderRadius: 5,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            label: function (context) {
+                                return `${context.dataset.label}: ${context.parsed.y}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    });
+</script>
+
 
 
 @endsection
